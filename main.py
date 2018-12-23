@@ -22,8 +22,10 @@ N: Show the next set of lines.
 P: Show previous lines.
 A: Show the about page.
 C: Close the translation files.
-S: Save changes.
-Or press a number to edit its line.""")
+S: Save changes to disk.
+R: Reload lines from disk.
+Or press a number to edit its line.
+""")
 
 def printTranslationLines(initialLine: int, lines=10):
     global firstFileTranslations, commonKeys, secondFileTranslations
@@ -36,19 +38,22 @@ def printTranslationLines(initialLine: int, lines=10):
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
-def openFile(num: int):
+def openFile(num: int, URI: str = None):
     global firstFileLines, isTranslationLane, firstFileTranslations, firstFileKeys, firstFileURI, secondFileTranslations, secondFileURI, commonKeys
-    print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
-    getpass.getpass(prompt='')
+    if URI == None:
+        print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
+        getpass.getpass(prompt='')
     if num == 1:
-        line = 0
         firstFileLines = []
         isTranslationLine = []
         firstFileKeys = []
         firstFileTranslations = {}
-        firstFileURI = easygui.fileopenbox(title="Open file #1",default='*.lang',filetypes=["*.lang"])
-        if firstFileURI == None:
-            return -1
+        if URI == None:
+            firstFileURI = easygui.fileopenbox(title="Open file #1",default='*.lang',filetypes=["*.lang"])
+            if firstFileURI == None:
+                return -1
+        else:
+            firstFileURI = URI
         with open(firstFileURI,mode='r+') as file:
             for l in file:
                 if ("=" not in l) or l.startswith("#"):
@@ -62,14 +67,16 @@ def openFile(num: int):
                     if value.endswith("\n"):
                         value = value[:-1]
                     firstFileTranslations[key] = value
-                line += 1
         print(str(firstFileTranslations) + "\n\n\n")
     elif num == 2:
         line = 0
         secondFileTranslations = {}
-        secondFileURI = easygui.fileopenbox(title="Open file #2",default='*.lang',filetypes=["*.lang"])
-        if secondFileURI == None:
-            return -1
+        if URI == None:
+            secondFileURI = easygui.fileopenbox(title="Open file #2",default='*.lang',filetypes=["*.lang"])
+            if secondFileURI == None:
+                return -1
+        else:
+            secondFileURI = URI
         with open(secondFileURI,mode='r+') as file:
             for l in file:
                 if ("=" in l) and not l.startswith("#"):
@@ -77,7 +84,6 @@ def openFile(num: int):
                     if value.endswith("\n"):
                         value = value[:-1]
                     secondFileTranslations[key] = value
-                line += 1
         print(str(secondFileTranslations) + "\n\n\n")
         commonKeys = []
         for key in firstFileKeys:
@@ -106,7 +112,32 @@ def main():
         cls()
         showMainHelp()
         printTranslationLines(currentTranslationIndex)
-        input()
+        option = input()
+        if option.lower() == 'u':
+            addUntranslated()
+        elif option.lower() == 'n':
+            if currentTranslationIndex + 10 < len(commonKeys):
+                currentTranslationIndex += 10
+            else:
+                print("Not enough lines to show next page. Press Enter.")
+                getpass.getpass(prompt='')
+        elif option.lower() == 'p':
+            if currentTranslationIndex > 0:
+                currentTranslationIndex -= 10
+            else:
+                print("Not enough lines to show previous page. Press Enter.")
+                getpass.getpass(prompt='')
+        elif option.lower() == 'a':
+            showAbout()
+        elif option.lower() == 'c':
+            isOpenFile1 = False
+            isOpenFile2 = False
+            currentTranslationIndex = 0
+        elif option.lower() == 's':
+            save()
+        elif option.lower() == 'r':
+            openFile(1,firstFileURI)
+            openFile(2,secondFileURI)
 
 if __name__ == "__main__":
     main()
