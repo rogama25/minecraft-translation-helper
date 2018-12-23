@@ -4,16 +4,19 @@ import easygui
 
 
 def print_welcome_message():
-    print("""Welcome to my Minecraft translation helper.
+    print("""
+Welcome to my Minecraft translation helper.
 
 You can find the source code, along with the license and the changelog at https://github.com/rogama25/minecraft-translation-helper
 
 I would also appreciate it if you contribute to the project, reporting issues or (in the future), donating.
 
-Press enter to continue.""")
-    lulus = getpass.getpass(prompt='')
+Press Enter to continue.""")
+    getpass.getpass(prompt='')
 
 def openFile(num: int):
+    print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
+    getpass.getpass(prompt='')
     if num == 1:
         line = 0
         global firstFileLines, isTranslationLane, firstFileTranslations, firstFileKeys, firstFileURI
@@ -44,7 +47,7 @@ def openFile(num: int):
         global secondFileTranslations, secondFileURI
         secondFileTranslations = {}
         secondFileURI = easygui.fileopenbox(title="Open file #2",default='*.lang',filetypes=["*.lang"])
-        if firstFileURI == None:
+        if secondFileURI == None:
             return -1
         with open(secondFileURI,mode='r+') as file:
             for l in file:
@@ -59,9 +62,10 @@ def openFile(num: int):
         return -1
 
 def main():
+    print_welcome_message()
     isOpenFile1 = False
     isOpenFile2 = False
-    print_welcome_message()
+    currentTranslationIndex = 0
     while True:
         if isOpenFile1 != True:
             if openFile(1) != -1:
@@ -73,6 +77,7 @@ def main():
                 isOpenFile2 = True
             else:
                 continue
+
 
 if __name__ == "__main__":
     main()
