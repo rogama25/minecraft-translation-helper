@@ -24,6 +24,7 @@ A: Show the about page.
 C: Close the translation files.
 S: Save changes to disk.
 R: Reload lines from disk.
+E: Exit.
 Or press a number to edit its line.
 """)
 
@@ -138,6 +139,24 @@ def main():
         elif option.lower() == 'r':
             openFile(1,firstFileURI)
             openFile(2,secondFileURI)
+        elif option.lower() == 'e':
+            sys.exit()
+        elif option == '':
+            pass
+        else:
+            try:
+                option = int(option)
+                if option >= 0 and option <=9:
+                    if option == 0:
+                        option = 9
+                    else:
+                        option -= 1
+                    edit(commonKeys[currentTranslationIndex+option])
+                else:
+                    raise ValueError()
+            except ValueError:
+                print("Please input a valid character")
+                getpass.getpass(prompt='')
 
 if __name__ == "__main__":
     main()
