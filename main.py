@@ -47,6 +47,7 @@ def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def open_file(num: int, URI: str = None):
+    global firstFileLines, isTranslationLine, firstFileKeys, firstFileTranslations, secondFileTranslations, commonKeys, firstFileURI, secondFileURI
     if URI == None:
         print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
         getpass.getpass(prompt='')
@@ -95,6 +96,7 @@ def open_file(num: int, URI: str = None):
         return -1
 
 def add_untranslated():
+    global firstFileLines, isTranslationLine, firstFileKeys, firstFileTranslations, secondFileTranslations, commonKeys, firstFileURI, secondFileURI
     for key in firstFileKeys:
         if key not in secondFileTranslations:
             edit(key)
@@ -117,6 +119,7 @@ Press Enter to return to main menu.""")
     getpass.getpass(prompt='')
 
 def edit(key: str):
+    global firstFileLines, isTranslationLine, firstFileKeys, firstFileTranslations, secondFileTranslations, commonKeys, firstFileURI, secondFileURI
     cls()
     print("You are now translating " + key + "\n")
     print("Unstranslated line: " + repr(firstFileTranslations[key]) +"\n")
@@ -128,6 +131,7 @@ def edit(key: str):
     recalculate_common()
 
 def save():
+    global firstFileLines, isTranslationLine, firstFileKeys, firstFileTranslations, secondFileTranslations, commonKeys, firstFileURI, secondFileURI
     l = 0
     with open(secondFileURI, "w+") as file:
         for line in firstFileLines:
@@ -139,12 +143,14 @@ def save():
             l += 1
 
 def recalculate_common():
+    global firstFileLines, isTranslationLine, firstFileKeys, firstFileTranslations, secondFileTranslations, commonKeys, firstFileURI, secondFileURI
     commonKeys = []
     for key in firstFileKeys:
         if key in secondFileTranslations:
             commonKeys.append(key)
 
 def main():
+    global firstFileLines, isTranslationLine, firstFileKeys, firstFileTranslations, secondFileTranslations, commonKeys, firstFileURI, secondFileURI
     print_welcome_message()
     isOpenFile1 = False
     isOpenFile2 = False
