@@ -68,7 +68,6 @@ def openFile(num: int, URI: str = None):
                     if value.endswith("\n"):
                         value = value[:-1]
                     firstFileTranslations[key] = value
-        print(str(firstFileTranslations) + "\n\n\n" + str(isTranslationLine) + "\n\n\n")
     elif num == 2:
         line = 0
         secondFileTranslations = {}
@@ -85,12 +84,10 @@ def openFile(num: int, URI: str = None):
                     if value.endswith("\n"):
                         value = value[:-1]
                     secondFileTranslations[key] = value
-        print(str(secondFileTranslations) + "\n\n\n")
         commonKeys = []
         for key in firstFileKeys:
             if key in secondFileTranslations:
                 commonKeys.append(key)
-        print(commonKeys)
     else:
         return -1
 
@@ -112,7 +109,9 @@ Source code available at: https://github.com/rogama25/minecraft-translation-help
 
 Distributed under the GNU GPLv3
 
-Version 0.1""")
+Version 0.1
+
+Press Enter to return to main menu.""")
     getpass.getpass(prompt='')
 
 def edit(key: str):
@@ -135,14 +134,12 @@ def save():
     l = 0
     with open(secondFileURI, "w+") as file:
         for line in firstFileLines:
-            print(str(isTranslationLine[l]) + str(l))
             if isTranslationLine[l] == True:
                 if line in secondFileTranslations:
                     file.write(line + "=" + secondFileTranslations[line] + "\n")
             else:
                 file.write(line)
             l += 1
-    input()
 
 def main():
     print_welcome_message()
