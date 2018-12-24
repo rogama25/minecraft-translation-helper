@@ -34,13 +34,13 @@ def printTranslationLines(initialLine: int, lines=10):
     if len(commonKeys) < finalLine:
         finalLine = len(commonKeys)
     for i in range(initialLine, finalLine):
-        print(str(((i+1)%10)) + ": Untranslated line: " + firstFileTranslations[commonKeys[i]] + "\n   Translated line: " + secondFileTranslations[commonKeys[i]] + "\n")
+        print(str(((i+1)%10)) + ": Untranslated line: " + repr(firstFileTranslations[commonKeys[i]]) + "\n   Translated line: " + repr(secondFileTranslations[commonKeys[i]]) + "\n")
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def openFile(num: int, URI: str = None):
-    global firstFileLines, isTranslationLane, firstFileTranslations, firstFileKeys, firstFileURI, secondFileTranslations, secondFileURI, commonKeys
+    global firstFileLines, isTranslationLine, firstFileTranslations, firstFileKeys, firstFileURI, secondFileTranslations, secondFileURI, commonKeys
     if URI == None:
         print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
         getpass.getpass(prompt='')
@@ -68,7 +68,7 @@ def openFile(num: int, URI: str = None):
                     if value.endswith("\n"):
                         value = value[:-1]
                     firstFileTranslations[key] = value
-        print(str(firstFileTranslations) + "\n\n\n")
+        print(str(firstFileTranslations) + "\n\n\n" + str(isTranslationLine) + "\n\n\n")
     elif num == 2:
         line = 0
         secondFileTranslations = {}
@@ -93,6 +93,56 @@ def openFile(num: int, URI: str = None):
         print(commonKeys)
     else:
         return -1
+
+def addUntranslated():
+    global firstFileKeys, secondFileTranslations
+    for key in firstFileKeys:
+        if key not in secondFileTranslations:
+            edit(key)
+            print("Return to main menu? Type y to exit, anything else to translate next line.")
+            i = input()
+            if i.lower() == 'y':
+                return
+
+def showAbout():
+    cls()
+    print("""Software created by rogama25.
+
+Source code available at: https://github.com/rogama25/minecraft-translation-helper
+
+Distributed under the GNU GPLv3
+
+Version 0.1""")
+    getpass.getpass(prompt='')
+
+def edit(key: str):
+    global firstFileTranslations, secondFileTranslations, commonKeys
+    cls()
+    print("You are now translating " + key + "\n")
+    print("Unstranslated line: " + repr(firstFileTranslations[key]) +"\n")
+    if key in secondFileTranslations:
+        print("Current translated line: " + repr(secondFileTranslations[key]) + "\n")
+    print("Type the new translation:")
+    i = input()
+    secondFileTranslations[key] = i
+    commonKeys = []
+    for key in firstFileKeys:
+        if key in secondFileTranslations:
+            commonKeys.append(key)
+
+def save():
+    global firstFileLines, isTranslationLine, secondFileTranslations, secondFileURI
+    l = 0
+    with open(secondFileURI, "w+") as file:
+        for line in firstFileLines:
+            print(str(isTranslationLine[l]) + str(l))
+            if isTranslationLine[l] == True:
+                if line in secondFileTranslations:
+                    file.write(line + "=" + secondFileTranslations[line] + "\n")
+            else:
+                file.write(line)
+            l += 1
+    input()
 
 def main():
     print_welcome_message()
@@ -140,7 +190,10 @@ def main():
             openFile(1,firstFileURI)
             openFile(2,secondFileURI)
         elif option.lower() == 'e':
-            sys.exit()
+            print("Exit? Any unsaved changes will be lost. [Y to exit]")
+            i = input()
+            if i.lower() == 'y':
+                sys.exit()
         elif option == '':
             pass
         else:
