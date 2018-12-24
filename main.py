@@ -3,6 +3,14 @@ import sys
 import easygui
 import os
 
+firstFileLines = []
+isTranslationLine = []
+firstFileKeys = []
+firstFileTranslations = {}
+secondFileTranslations = {}
+commonKeys = []
+firstFileURI = None
+secondFileURI = None
 
 def print_welcome_message():
     print("""
@@ -15,7 +23,7 @@ I would also appreciate it if you contribute to the project, reporting issues or
 Press Enter to continue.""")
     getpass.getpass(prompt='')
 
-def showMainHelp():
+def show_main_help():
     print("""Welcome to the main screen. You can press the following keys:
 U: Add missing translations.
 N: Show the next set of lines.
@@ -28,8 +36,7 @@ E: Exit.
 Or press a number to edit its line.
 """)
 
-def printTranslationLines(initialLine: int, lines=10):
-    global firstFileTranslations, commonKeys, secondFileTranslations
+def print_translation_lines(initialLine: int, lines=10):
     finalLine = initialLine+10
     if len(commonKeys) < finalLine:
         finalLine = len(commonKeys)
@@ -39,8 +46,7 @@ def printTranslationLines(initialLine: int, lines=10):
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
-def openFile(num: int, URI: str = None):
-    global firstFileLines, isTranslationLine, firstFileTranslations, firstFileKeys, firstFileURI, secondFileTranslations, secondFileURI, commonKeys
+def open_file(num: int, URI: str = None):
     if URI == None:
         print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
         getpass.getpass(prompt='')
@@ -84,15 +90,11 @@ def openFile(num: int, URI: str = None):
                     if value.endswith("\n"):
                         value = value[:-1]
                     secondFileTranslations[key] = value
-        commonKeys = []
-        for key in firstFileKeys:
-            if key in secondFileTranslations:
-                commonKeys.append(key)
+                    recalculate_common()
     else:
         return -1
 
-def addUntranslated():
-    global firstFileKeys, secondFileTranslations
+def add_untranslated():
     for key in firstFileKeys:
         if key not in secondFileTranslations:
             edit(key)
@@ -101,7 +103,7 @@ def addUntranslated():
             if i.lower() == 'y':
                 return
 
-def showAbout():
+def show_about():
     cls()
     print("""Software created by rogama25.
 
@@ -115,7 +117,6 @@ Press Enter to return to main menu.""")
     getpass.getpass(prompt='')
 
 def edit(key: str):
-    global firstFileTranslations, secondFileTranslations, commonKeys
     cls()
     print("You are now translating " + key + "\n")
     print("Unstranslated line: " + repr(firstFileTranslations[key]) +"\n")
@@ -124,13 +125,9 @@ def edit(key: str):
     print("Type the new translation:")
     i = input()
     secondFileTranslations[key] = i
-    commonKeys = []
-    for key in firstFileKeys:
-        if key in secondFileTranslations:
-            commonKeys.append(key)
+    recalculate_common()
 
 def save():
-    global firstFileLines, isTranslationLine, secondFileTranslations, secondFileURI
     l = 0
     with open(secondFileURI, "w+") as file:
         for line in firstFileLines:
@@ -141,6 +138,12 @@ def save():
                 file.write(line)
             l += 1
 
+def recalculate_common():
+    commonKeys = []
+    for key in firstFileKeys:
+        if key in secondFileTranslations:
+            commonKeys.append(key)
+
 def main():
     print_welcome_message()
     isOpenFile1 = False
@@ -148,21 +151,21 @@ def main():
     currentTranslationIndex = 0
     while True:
         if isOpenFile1 != True:
-            if openFile(1) != -1:
+            if open_file(1) != -1:
                 isOpenFile1 = True
             else:
                 continue
         if isOpenFile2 != True:
-            if openFile(2) != -1:
+            if open_file(2) != -1:
                 isOpenFile2 = True
             else:
                 continue
         cls()
-        showMainHelp()
-        printTranslationLines(currentTranslationIndex)
+        show_main_help()
+        print_translation_lines(currentTranslationIndex)
         option = input()
         if option.lower() == 'u':
-            addUntranslated()
+            add_untranslated()
         elif option.lower() == 'n':
             if currentTranslationIndex + 10 < len(commonKeys):
                 currentTranslationIndex += 10
@@ -176,7 +179,7 @@ def main():
                 print("Not enough lines to show previous page. Press Enter.")
                 getpass.getpass(prompt='')
         elif option.lower() == 'a':
-            showAbout()
+            show_about()
         elif option.lower() == 'c':
             isOpenFile1 = False
             isOpenFile2 = False
@@ -184,8 +187,8 @@ def main():
         elif option.lower() == 's':
             save()
         elif option.lower() == 'r':
-            openFile(1,firstFileURI)
-            openFile(2,secondFileURI)
+            open_file(1,firstFileURI)
+            open_file(2,secondFileURI)
         elif option.lower() == 'e':
             print("Exit? Any unsaved changes will be lost. [Y to exit]")
             i = input()
@@ -205,7 +208,7 @@ def main():
                 else:
                     raise ValueError()
             except ValueError:
-                print("Please input a valid character")
+                print("Please input a valid character.")
                 getpass.getpass(prompt='')
 
 if __name__ == "__main__":
