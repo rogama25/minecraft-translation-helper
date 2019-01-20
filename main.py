@@ -69,7 +69,7 @@ def open_file(num: int, uri: str = None):
 				return -1
 		else:
 			first_file_uri = uri
-		with open(first_file_uri, mode='r+') as file:
+		with open(first_file_uri, mode='r+', encoding="utf-8") as file:
 			for l in file:
 				if ("=" not in l) or l.startswith("#"):
 					first_file_lines.append(l)
@@ -90,7 +90,7 @@ def open_file(num: int, uri: str = None):
 				return -1
 		else:
 			second_file_uri = uri
-		with open(second_file_uri, mode='r+') as file:
+		with open(second_file_uri, mode='r+', encoding="utf-8") as file:
 			for l in file:
 				if ("=" in l) and not l.startswith("#"):
 					key, value = l.split("=", 1)
@@ -143,7 +143,7 @@ def edit(key: str):
 def save():
 	global first_file_lines, is_translation_line, first_file_keys, first_file_translations, second_file_translations, common_keys, first_file_uri, second_file_uri
 	line_number = 0
-	with open(second_file_uri, "w+") as file:
+	with open(second_file_uri, "w+", encoding="utf-8") as file:
 		for line in first_file_lines:
 			if is_translation_line[line_number]:
 				if line in second_file_translations:
