@@ -13,6 +13,10 @@ first_file_uri = None
 second_file_uri = None
 
 
+def press_enter():
+	getpass.getpass(prompt='')
+
+
 def print_welcome_message():
 	print("""
 Welcome to my Minecraft translation helper.
@@ -22,7 +26,7 @@ You can find the source code, along with the license and the changelog at https:
 I would also appreciate it if you contribute to the project, reporting issues or (in the future), donating.
 
 Press Enter to continue.""")
-	getpass.getpass(prompt='')
+	press_enter()
 
 
 def show_main_help():
@@ -57,7 +61,7 @@ def open_file(num: int, uri: str = None):
 	global first_file_lines, is_translation_line, first_file_keys, first_file_translations, second_file_translations, common_keys, first_file_uri, second_file_uri
 	if uri is None:
 		print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
-		getpass.getpass(prompt='')
+		press_enter()
 	if num == 1:
 		first_file_lines = []
 		is_translation_line = []
@@ -189,13 +193,13 @@ def main():
 				current_translation_index += 10
 			else:
 				print("Not enough lines to show next page. Press Enter.")
-				getpass.getpass(prompt='')
+				press_enter()
 		elif option.lower() == 'p':
 			if current_translation_index > 0:
 				current_translation_index -= 10
 			else:
 				print("Not enough lines to show previous page. Press Enter.")
-				getpass.getpass(prompt='')
+				press_enter()
 		elif option.lower() == 'a':
 			show_about()
 		elif option.lower() == 'c':
@@ -228,7 +232,7 @@ def main():
 					raise ValueError()
 			except ValueError:
 				print("Please input a valid character.")
-				getpass.getpass(prompt='')
+				press_enter()
 
 
 if __name__ == "__main__":
