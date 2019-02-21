@@ -67,7 +67,7 @@ def edit(tr: Translations, key: str):
 def add_untranslated(tr: Translations):
 	for key in tr.first_file_keys:
 		if key not in tr.second_file_translations:
-			edit(key)
+			edit(tr, key)
 			print("Return to main menu? Type y to exit, anything else to translate next line.")
 			i = input()
 			if i.lower() == 'y':
