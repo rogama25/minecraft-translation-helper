@@ -1,5 +1,7 @@
 import getpass
 import os
+from Translations import Translations
+import easygui
 
 
 def press_enter():
@@ -48,3 +50,50 @@ Version 0.1
 
 Press Enter to return to main menu.""")
 	getpass.getpass(prompt='')
+
+
+def edit(tr: Translations, key: str):
+	cls()
+	print("You are now translating " + key + "\n")
+	print("Untranslated line: " + repr(tr.first_file_translations[key]) + "\n")
+	if key in tr.second_file_translations:
+		print("Current translated line: " + repr(tr.second_file_translations[key]) + "\n")
+	print("Type the new translation:")
+	i = input()
+	tr.second_file_translations[key] = i
+	tr.recalculate_common()
+
+
+def add_untranslated(tr: Translations):
+	for key in tr.first_file_keys:
+		if key not in tr.second_file_translations:
+			edit(key)
+			print("Return to main menu? Type y to exit, anything else to translate next line.")
+			i = input()
+			if i.lower() == 'y':
+				return
+
+
+def print_translation_lines(tr: Translations, initial_line: int, lines=10):
+	final_line = initial_line + lines
+	if len(tr.common_keys) < final_line:
+		final_line = len(tr.common_keys)
+	for i in range(initial_line, final_line):
+		print(str(((i + 1) % lines)) + ": Untranslated line: " + repr(
+			tr.first_file_translations[tr.common_keys[i]]) + "\n   Translated line: " + repr(
+			tr.second_file_translations[tr.common_keys[i]]) + "\n")
+
+
+def open_file(tr: Translations, num: int, uri: str = None):
+	if uri is None:
+		print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
+		press_enter()
+		uri = easygui.fileopenbox(title="Open file #" + str(num), default='*.lang', filetypes=["*.lang"])
+	if uri is None:
+		return -1
+	if num == 1:
+		tr.first_file_uri = uri
+		tr.load_first()
+	elif num == 2:
+		tr.second_file_uri = uri
+		tr.load_second()

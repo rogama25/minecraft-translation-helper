@@ -9,12 +9,11 @@ class Translations:
 		self.first_file_uri = None
 		self.second_file_uri = None
 	
-	def load_first(self, uri: str):
+	def load_first(self):
 		self.first_file_lines = []
 		self.is_translation_line = []
 		self.first_file_keys = []
 		self.first_file_translations = {}
-		self.first_file_uri = uri
 		with open(self.first_file_uri, mode='r+', encoding="utf-8") as file:
 			for l in file:
 				if ("=" not in l) or l.startswith("#"):
@@ -29,9 +28,8 @@ class Translations:
 						value = value[:-1]
 					self.first_file_translations[key] = value
 
-	def load_second(self, uri: str):
+	def load_second(self):
 		self.second_file_translations = {}
-		self.second_file_uri = uri
 		with open(self.second_file_uri, mode='r+', encoding="utf-8") as file:
 			for l in file:
 				if ("=" in l) and not l.startswith("#"):
