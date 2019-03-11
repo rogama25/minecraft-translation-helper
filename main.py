@@ -1,6 +1,6 @@
 import sys
 from console_util import *
-import Translations
+from Translations import *
 
 
 def main():
