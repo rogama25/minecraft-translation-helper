@@ -1,10 +1,10 @@
 # rogama's Minecraft translation helper
 
-This project aims to be a simple program that can help you when you need to translate Minecraft language files, doing it in a guided way instead of editing directly the .lang files.
+This project aims to be a simple program that can help you when you need to translate Minecraft language files, doing it in a guided way instead of editing directly the .lang/.json files.
 
 ## Downloads
 
-You can download my program [here](https://github.com/rogama25/minecraft-translation-helper/releases/latest). You can get the precompiled version for windows or run it directly from the source code.
+You can download my program [here](https://github.com/rogama25/minecraft-translation-helper/releases/latest). You can get the precompiled version for windows or run it directly from the source code. For .lang files (Minecraft 1.12 or older), use v0.1.3. For .json (MC 1.13 or newer), use v1.0 or newer versions.
 
 #### Requirements
 * To run from source code you need to have Python 3.6.8 installed (other versions may or may not work). [For Windows or MacOS, get it here.](https://www.python.org/downloads/release/python-368/) For Linux, follow the instruction for your distribution.
