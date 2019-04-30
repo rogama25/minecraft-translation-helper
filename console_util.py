@@ -88,7 +88,7 @@ def open_file(tr: Translations, num: int, uri: str = None):
 	if uri is None:
 		print("Please select the file #" + str(num) + " in the next window. Press Enter to continue.")
 		press_enter()
-		uri = easygui.fileopenbox(title="Open file #" + str(num), default='*.lang', filetypes=["*.lang"])
+		uri = easygui.fileopenbox(title="Open file #" + str(num), default='*.json', filetypes=["*.json"])
 	if uri is None:
 		return -1
 	if num == 1:
